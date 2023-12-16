@@ -12,21 +12,19 @@ root.config(bg='pink') #colour
 
 
 def ask():
-    user_val = entry.get()  # Get user input from Entry widget
+    user_val = speech_to_text()  # Get user input using speech recognition
     bot_val = action.Action(user_val)
     text.insert(END, 'User ---> ' + user_val + "\n")
-    if bot_val != None:
+    if bot_val is not None:
         text.insert(END, "Bot ---> " + str(bot_val) + '\n')
     if bot_val == "Okay, shutting down":
         root.destroy()
-#ask func
 
-    
-    
-    
+
+       
 #del func
 def delete():
-    text.delete('1.0', "End")
+    text.delete('1.0', "end")
     
 #send func
 def send():
