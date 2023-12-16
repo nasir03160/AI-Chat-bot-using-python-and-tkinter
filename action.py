@@ -49,7 +49,11 @@ def Action(data=None):
         stremio_path = r'C:\Users\Dell\AppData\Local\Programs\LNV\Stremio-4\Stremio.exe'
         open_application(stremio_path)
         response = "Opened Stremio"
-
+    
+    elif "open desktop" in user_data:
+        Desktop_path=r'E:\OneDrive\Desktop'
+        open_application(Desktop_path)
+        response="Desktop File opened"
     else:
         text_to_speech.text_to_speech("I don't understand")
         response = "I don't understand"
