@@ -3,6 +3,31 @@ import webbrowser
 import text_to_speech
 import os
 import speech_to_text
+import shutil
+
+def copy_files(source, target):
+    try:
+        for path, _, files in os.walk(source):
+            if files:
+                for file in files:
+                    source_file = os.path.join(path, file)
+                    target_file = os.path.join(target, file)
+                    
+                    if not os.path.isfile(target_file):
+                        shutil.copy(source_file, target)
+                        print(f"Copied: {file} from {source} to {target}")
+                    else:
+                        print(f"File already exists in target: {file}")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    except PermissionError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+# Example usage:
+
+
 
 def open_application(application_path):
     try:
@@ -48,12 +73,25 @@ def Action(data=None):
     elif "open stremio" in user_data:
         stremio_path = r'C:\Users\Dell\AppData\Local\Programs\LNV\Stremio-4\Stremio.exe'
         open_application(stremio_path)
-        response = "Opened Stremio"
+        text_to_speech.text_to_speech("opened stremio")
+        response = "opened Stremio"
     
     elif "open desktop" in user_data:
         Desktop_path=r'E:\OneDrive\Desktop'
         open_application(Desktop_path)
-        response="Desktop File opened"
+        text_to_speech.text_to_speech("desktop file opened")
+        response="desktop File opened"
+        
+    elif "copy files from source to target" in user_data:
+        source_path = r"C:\source"  # Replace with your source directory
+        target_path = r"E:\target"  # Replace with your target directory
+        copy_files(source_path, target_path)
+        text_to_speech.text_to_speech("the designated file has been copyed from ource to target")
+        response='the designated file has been copyed from source to target'
+        
+        
+        
+        
     else:
         text_to_speech.text_to_speech("I don't understand")
         response = "I don't understand"
