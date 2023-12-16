@@ -25,6 +25,26 @@ def copy_files(source, target):
     except Exception as e:
         print(f"Unexpected error: {e}")
 
+def delete_files(directory):
+    try:
+        for file in os.listdir(directory):
+            file_path = os.path.join(directory, file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                    print(f"Deleted: {file_path}")
+            except Exception as e:
+                print(f"Error: {e}")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    except PermissionError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+
+
+
 # Example usage:
 
 
@@ -88,6 +108,12 @@ def Action(data=None):
         copy_files(source_path, target_path)
         text_to_speech.text_to_speech("the designated file has been copyed from ource to target")
         response='the designated file has been copyed from source to target'
+        
+    elif "delete files from target" in user_data:
+        target_path = r"E:\target"  # Replace with your target directory
+        delete_files(target_path)
+        text_to_speech.text_to_speech('all files in the targeted directory have been deleted')
+        response("all files in the target directory have been deleted")
         
         
         
