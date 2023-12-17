@@ -4,6 +4,8 @@ import text_to_speech
 import os
 import speech_to_text
 import shutil
+from weather import get_weather
+api_key='4dac143db9520d5f0d5053625e79815b'
 
 def copy_files(source, target):
     try:
@@ -114,6 +116,13 @@ def Action(data=None):
         delete_files(target_path)
         text_to_speech.text_to_speech('all files in the targeted directory have been deleted')
         response("all files in the target directory have been deleted")
+        
+    elif "tell me the weather" in user_data or "what is the weather" in user_data:
+        city = user_data.split("weather")[1].strip()
+        weather_result = get_weather(api_key, city)
+        text_to_speech.text_to_speech(f'The weather today is {weather_result}')
+        response(f'the weather toady is {weather_result}')
+
         
         
         

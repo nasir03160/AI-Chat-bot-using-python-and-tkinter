@@ -1,12 +1,58 @@
-# pip install requests-html
-#pip install lxml
-#user_agent 
-#Asharaib user agent apna use karna 
-from nturl2path import url2pathname
-from requests_html import HTMLSession
 import speech_to_text
+import requests
+#pip install requests  
+import requests
+from datetime import datetime
 
-s=HTMLSession()
-query= "Karachi"
-#r=s.get(#url, headers="{User_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36}")
-url="https://www.google.com/search?q=weather+karachi&rlz=1C1SQJL_enPK1045PK1045&oq=weather+karachi&gs_lcrp=EgZjaHJvbWUqCggAEAAYsQMYgAQyCggAEAAYsQMYgAQyCggBEAAYsQMYgAQyBwgCEAAYgAQyBwgDEAAYgAQyBwgEEAAYgAQyBwgFEAAYgAQyBwgGEAAYgAQyBwgHEAAYgAQyBwgIEAAYgAQyBwgJEAAYgATSAQgyOTg5ajFqN6gCALACAA&sourceid=chrome&ie=UTF-8+ {query}"
+# OpenWeatherMap API key 
+api_key=''
+
+
+def get_weather(api_key, city):
+    base_url = "https://api.openweathermap.org/data/2.5/weather"
+
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"  # You can change this to "imperial" for Fahrenheit
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        data = response.json()
+
+        if response.status_code == 200:
+            weather_description = data["weather"][0]["description"]
+            temperature = data["main"]["temp"]
+            humidity = data["main"]["humidity"]
+            wind_speed = data["wind"]["speed"]
+
+            result = (
+                f"The weather in {city} is {weather_description}. "
+                f"The temperature is {temperature}°C, humidity is {humidity}%, "
+                f"and wind speed is {wind_speed} m/s."
+            )
+        else:
+            result = f"Failed to fetch weather data. Error: {data['message']}"
+    except Exception as e:
+        result = f"Error: {e}"
+
+    return result
+
+# Example of using the get_weather function
+city_name = "Karachi,PK"
+weather_result = get_weather(api_key, city_name)
+print(weather_result)
+
+
+
+
+
+
+
+
+
+
+
+
+
