@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import scrolledtext
 from PIL import Image, ImageTk, ImageSequence
 import action
+from speech_to_text import speech_to_text
 
 class MainPage:
     def __init__(self, root):
@@ -38,7 +39,7 @@ class MainPage:
         self.button_icon = ImageTk.PhotoImage(icon_image)
 
         # Add a button with the resized microphone icon
-        self.button = tk.Button(self.controls_frame, image=self.button_icon, bd=0, command=self.button_click)
+        self.button = tk.Button(self.controls_frame, image=self.button_icon, bd=0, command=self.ask)
         self.button.grid(row=0, column=0, padx=10)
 
         # Add a button for Chat
@@ -52,9 +53,14 @@ class MainPage:
         # Move to the next frame after a delay (adjust the delay in milliseconds)
         self.root.after(50, lambda: self.play_gif((frame_index + 1) % len(self.frames)))
 
-    def button_click(self):
-        # Do something when the button is clicked
-        print("Button Clicked!")
+    def ask(self):
+        user_val = speech_to_text()  # Get user input using speech recognition
+        bot_val = action.Action(user_val)
+        self.response_text.insert(tk.END, 'User ---> ' + user_val + "\n")
+        if bot_val is not None:
+            self.response_text.insert(tk.END, "Bot ---> " + str(bot_val) + '\n')
+        if bot_val == "Okay, shutting down":
+            self.root.destroy()
 
     def open_chat_screen(self):
         # Create a new window for the chat screen
@@ -85,21 +91,21 @@ class MainPage:
         text_label.place(relx=1/3, rely=2/3, anchor="nw")  # Position in the corner (1/3 of the screen width)
 
         # Add a text box for sending requests
-        request_entry = tk.Entry(chat_window, bg="gray", fg="white", font=("Helvetica", 12))
-        request_entry.place(relx=1/3, rely=1/3, anchor="nw", width=300, height=30)
+        self.request_entry = tk.Entry(chat_window, bg="gray", fg="white", font=("Helvetica", 12))
+        self.request_entry.place(relx=1/3, rely=1/3, anchor="nw", width=300, height=30)
 
         # Add a text box for displaying responses
-        response_text = scrolledtext.ScrolledText(chat_window, wrap=tk.WORD, width=40, height=10, bg="gray", fg="white")
-        response_text.place(relx=1/3, rely=1/2, anchor="nw", width=400, height=200)
+        self.response_text = scrolledtext.ScrolledText(chat_window, wrap=tk.WORD, width=40, height=10, bg="gray", fg="white")
+        self.response_text.place(relx=1/3, rely=1/2, anchor="nw", width=400, height=200)
 
-      # Load the send icon
-       # Load the send icon
+        # Load the send icon
         send_icon_path = r"E:\OneDrive\Desktop\os projecr\OS\send_icon.png"  # Replace with the actual path to your send icon
         send_icon = Image.open(send_icon_path).resize((20, 20))
         self.send_icon = ImageTk.PhotoImage(send_icon)
 
-# Add a button for Send with the icon
-        send_button = tk.Button(chat_window, text="Send", image=self.send_icon, compound=tk.LEFT, command=lambda: self.send_request(request_entry, response_text), bd=0)
+        # Add a button for Send with the icon
+        send_button = tk.Button(chat_window, text="Send", image=self.send_icon, compound=tk.LEFT,
+                                command=lambda: self.send_request(), bd=0)
         send_button.place(relx=1/3, rely=1/3, anchor="ne")
 
         # Load the delete icon
@@ -108,9 +114,9 @@ class MainPage:
         self.delete_icon = ImageTk.PhotoImage(delete_icon)
 
         # Add a button for Delete with the icon
-        delete_button = tk.Button(chat_window, text="Delete", image=self.delete_icon, compound=tk.LEFT, command=lambda: self.delete_text(response_text), bd=0)
+        delete_button = tk.Button(chat_window, text="Delete", image=self.delete_icon, compound=tk.LEFT,
+                                  command=lambda: self.delete_text(), bd=0)
         delete_button.place(relx=1/3, rely=1/2, anchor="ne")
-
 
     def play_new_gif(self, label, frames, frame_index):
         # Display the current frame
@@ -119,17 +125,17 @@ class MainPage:
         # Move to the next frame after a delay (adjust the delay in milliseconds)
         label.after(50, lambda: self.play_new_gif(label, frames, (frame_index + 1) % len(frames)))
 
-    def send_request(self, entry, text_widget):
-        user_val = entry.get()
+    def send_request(self):
+        user_val = self.request_entry.get()
         bot_val = action.Action(user_val)
-        text_widget.insert(tk.END, 'User ---> ' + user_val + "\n")
+        self.response_text.insert(tk.END, 'User ---> ' + user_val + "\n")
         if bot_val is not None:
-            text_widget.insert(tk.END, "Bot ---> " + str(bot_val) + '\n')
+            self.response_text.insert(tk.END, "Bot ---> " + str(bot_val) + '\n')
         if bot_val == "Okay, shutting down":
             self.root.destroy()
 
-    def delete_text(self, text_widget):
-        text_widget.delete('1.0', tk.END)
+    def delete_text(self):
+        self.response_text.delete('1.0', tk.END)
 
 
 if __name__ == "__main__":
