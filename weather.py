@@ -1,16 +1,12 @@
-import speech_to_text
-import requests
-#pip install requests  
 import requests
 from datetime import datetime
 
-# OpenWeatherMap API key 
-api_key=''
-
+# OpenWeatherMap API key
+api_key='4dac143db9520d5f0d5053625e79815b'  # Replace with your actual API key
 
 def get_weather(api_key, city):
     base_url = "https://api.openweathermap.org/data/2.5/weather"
-
+    
     params = {
         "q": city,
         "appid": api_key,
@@ -40,19 +36,6 @@ def get_weather(api_key, city):
     return result
 
 # Example of using the get_weather function
-city_name = "Karachi,PK"
+city_name = "Karachi,PK"  # You can replace this with any other city name
 weather_result = get_weather(api_key, city_name)
 print(weather_result)
-
-
-
-
-
-
-
-
-
-
-
-
-

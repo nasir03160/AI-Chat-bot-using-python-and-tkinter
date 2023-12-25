@@ -50,7 +50,6 @@ def delete_files(directory):
 # Example usage:
 
 
-
 def open_application(application_path):
     try:
         os.startfile(application_path)
@@ -88,6 +87,11 @@ def Action(data=None):
         quit()
 
     elif "open youtube" in user_data:
+        webbrowser.open("https://www.youtube.com/")
+        text_to_speech.text_to_speech("YouTube opened")
+        response = "YouTube opened"
+        
+    elif "c" in user_data:
         webbrowser.open("https://www.youtube.com/")
         text_to_speech.text_to_speech("YouTube opened")
         response = "YouTube opened"
